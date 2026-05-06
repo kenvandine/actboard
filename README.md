@@ -1,8 +1,9 @@
 # actboard
 
 A daily triage assistant that pulls activity from the places you actually live —
-Discord, GitHub, and Reddit — runs it through an LLM, and publishes a
-prioritized **ACT / MONITOR / HANDLED** report to a Notion page.
+Discord, GitHub, Reddit, and Ubuntu sponsoring queues — runs it through an
+LLM, and publishes a prioritized **ACT / MONITOR / HANDLED** report to a
+Notion page.
 
 Built for open-source maintainers and engineers who get pulled in too many
 directions to keep up by hand. Configure once, run on a schedule, read one
@@ -26,6 +27,7 @@ For each source you enable, actboard:
 | GitHub (REST) | Open issues / PRs in configured repos with recent activity | PAT (`repo` read) |
 | GitHub (`gh` CLI) | Review requests + @mentions across *all* repos | `gh auth login` |
 | Reddit | Posts in configured subreddits, optional keyword filter | None (public JSON) |
+| Launchpad | Ubuntu sponsoring-report queues (per-team merge proposals) | None (public JSON) |
 
 Every source is optional. Leave its config section empty (or omit it) and
 that source is skipped.
@@ -55,6 +57,7 @@ of redoing the full setup:
 | `/actboard-setup-discord` | Discord bot, server invite, channel filters |
 | `/actboard-setup-github` | GitHub PAT and repo list |
 | `/actboard-setup-reddit` | Subreddit list + keyword filters |
+| `/actboard-setup-launchpad` | Ubuntu sponsoring-report queues |
 | `/actboard-setup-responder` | Suggested-reply drafting for ACT items |
 | `/actboard-verify` | Ping every configured service |
 
@@ -131,7 +134,8 @@ schtasks /create /sc daily /tn ActBoard /tr "C:\path\to\.venv\Scripts\python.exe
         ├── discord_fetcher.py
         ├── github_fetcher.py    # REST API
         ├── gh_fetcher.py        # gh CLI bonuses
-        └── reddit_fetcher.py
+        ├── reddit_fetcher.py
+        └── launchpad_fetcher.py # Ubuntu sponsoring queues
 ```
 
 ## Contributing

@@ -15,6 +15,7 @@ from fetchers.discord_fetcher import fetch_discord
 from fetchers.github_fetcher import fetch_github
 from fetchers.gh_fetcher import fetch_gh_supplements
 from fetchers.reddit_fetcher import fetch_reddit
+from fetchers.launchpad_fetcher import fetch_launchpad
 from analyzer import analyze
 from responder import generate_responses
 from notion_writer import write_to_notion
@@ -124,9 +125,18 @@ def main():
         print(f"  {sub_key}: {len(posts)} posts")
     emit("stage_complete", "fetch_reddit", item_count=reddit_total)
 
+    # Fetch Launchpad sponsoring queues
+    emit("stage_start", "fetch_launchpad")
+    print("Fetching Launchpad sponsoring queues...")
+    launchpad_data = fetch_launchpad(config)
+    lp_total = sum(len(v) for v in launchpad_data.values())
+    for rep_key, items in launchpad_data.items():
+        print(f"  {rep_key}: {len(items)} entries")
+    emit("stage_complete", "fetch_launchpad", item_count=lp_total)
+
     # Analyze
     print("Analyzing...")
-    triage_result = analyze(discord_data, github_data, config, gh_extras, reddit_data)
+    triage_result = analyze(discord_data, github_data, config, gh_extras, reddit_data, launchpad_data)
 
     # Respond
     emit("stage_start", "responder")

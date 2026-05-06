@@ -66,6 +66,7 @@ read and execute the matching command file:
 - Discord — `actboard-setup-discord.md`
 - GitHub — `actboard-setup-github.md`
 - Reddit — `actboard-setup-reddit.md`
+- Launchpad sponsoring queues — `actboard-setup-launchpad.md`
 
 If the user skips a source, leave its config section as-is (blank/empty
 in the example). The pipeline silently skips sources with empty config.

@@ -77,6 +77,27 @@ Return only valid JSON:
 
 TriageItem = {{"summary": str, "reason": str, "link": str, "label": str, "is_recent": bool}}"""
 
+LAUNCHPAD_PROMPT_TEMPLATE = """{context}
+
+Review these Ubuntu sponsoring-report entries from the {report} queue and
+categorize each into ACT, MONITOR, or HANDLED. Each entry is a merge
+proposal waiting for an Ubuntu sponsor to review and upload it.
+
+{custom_prompt}
+
+- ACT: Merge proposals the user should sponsor / review themselves.
+- MONITOR: Proposals worth keeping an eye on but not theirs to action.
+- HANDLED: Anything already addressed.
+
+Use the source_package, description, and components fields. Items with
+is_recent=true were queued within the configured lookback window.
+Summarize each in 1-2 sentences. Always include the merge proposal link.
+
+Return only valid JSON:
+{{"act": [TriageItem], "monitor": [TriageItem], "handled": [TriageItem]}}
+
+TriageItem = {{"summary": str, "reason": str, "link": str, "label": str, "is_recent": bool}}"""
+
 
 def _prepare_reddit_posts(posts: list[dict], truncate_len: int = 1000) -> str:
     trimmed = []
@@ -255,7 +276,8 @@ def _make_caller(config: dict):
 
 
 def analyze(discord_data: list[dict], github_data: dict, config: dict,
-            gh_extras: dict | None = None, reddit_data: dict | None = None) -> dict:
+            gh_extras: dict | None = None, reddit_data: dict | None = None,
+            launchpad_data: dict | None = None) -> dict:
     """
     Parallel sub-agents: one per Discord channel, one per GitHub repo, one per subreddit.
     github_data is now a dict: {repo_name: [items]}
@@ -337,6 +359,25 @@ def analyze(discord_data: list[dict], github_data: dict, config: dict,
                 part = f" pt{i // max_posts_per_chunk + 1}" if len(posts) > max_posts_per_chunk else ""
                 tasks.append((sub_key, f"reddit/{sub_key}{part} ({len(chunk)} posts)", system, user_msg))
 
+    # Launchpad sponsoring reports
+    lp_cfg_by_key = {}
+    for rep_cfg in config.get("launchpad", {}).get("reports", []):
+        lp_cfg_by_key[f"lp/{rep_cfg['name']}"] = rep_cfg
+    if launchpad_data:
+        for rep_key, entries in launchpad_data.items():
+            if not entries:
+                continue
+            rep_cfg = lp_cfg_by_key.get(rep_key, {})
+            custom_prompt = rep_cfg.get("prompt", "Categorize entries as ACT, MONITOR, or HANDLED.")
+            report = rep_cfg.get("name", rep_key.removeprefix("lp/"))
+            system = LAUNCHPAD_PROMPT_TEMPLATE.format(context=context, report=report, custom_prompt=custom_prompt)
+            max_per_chunk = 10 if is_local else 100
+            for i in range(0, len(entries), max_per_chunk):
+                chunk = entries[i:i + max_per_chunk]
+                user_msg = json.dumps(chunk, indent=2, default=str)
+                part = f" pt{i // max_per_chunk + 1}" if len(entries) > max_per_chunk else ""
+                tasks.append((rep_key, f"launchpad/{report}{part} ({len(chunk)} entries)", system, user_msg))
+
     from pipeline_events import emit as _emit
     _emit("analyze_start", "analyzer", task_count=len(tasks), tasks=[t[1] for t in tasks])
     print(f"  Dispatching {len(tasks)} sub-agents in parallel...")
@@ -350,6 +391,9 @@ def analyze(discord_data: list[dict], github_data: dict, config: dict,
     if reddit_data:
         for sub_key in reddit_data:
             merged[sub_key] = {"act": [], "monitor": [], "handled": []}
+    if launchpad_data:
+        for rep_key in launchpad_data:
+            merged[rep_key] = {"act": [], "monitor": [], "handled": []}
 
     # Local LLM can only handle 1-2 concurrent requests; Claude can do many
     max_workers = 1 if inference.get("backend") == "local" else min(len(tasks), 10)

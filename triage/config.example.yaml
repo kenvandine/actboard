@@ -82,6 +82,24 @@ reddit:
   #       MONITOR: Related discussion I should be aware of.
   #       HANDLED: Everything else.
 
+launchpad:
+  # Optional. Ubuntu sponsoring queues — public JSON, no auth required.
+  # Source: http://sponsoring-reports.ubuntu.com/jsons/
+  # Leave reports empty to skip Launchpad entirely.
+  lookback_hours: 24
+  reports: []
+  # Example:
+  # reports:
+  #   - name: ubuntu-desktop      # without the .json suffix
+  #     icon: "🖥️"
+  #     hide_handled: true
+  #     keywords:                 # only entries whose source_package /
+  #       - gnome                 # description match survive. Empty = all.
+  #     prompt: |
+  #       ACT: Merge proposals I should sponsor for the desktop team.
+  #       MONITOR: Other queue items worth tracking.
+  #       HANDLED: Already merged or rejected.
+
 notion:
   # Page ID of the Notion page where daily triage pages will be created
   # under. Connect your Notion integration to this page first.

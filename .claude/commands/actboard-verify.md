@@ -51,6 +51,12 @@ Run only those whose credentials are present.
   `GET https://www.reddit.com/r/<name>/new.json?limit=1` with
   `User-Agent: actboard-verify`. 200 = subreddit reachable.
 
+### Launchpad sponsoring reports (optional)
+- For each entry in `launchpad.reports`:
+  `GET http://sponsoring-reports.ubuntu.com/jsons/<name>.json` with
+  `User-Agent: actboard-verify`. 200 + JSON list = report reachable.
+  404 = report name is wrong.
+
 ## Output
 
 After all checks, print a summary:
