@@ -31,6 +31,9 @@ inference:
 # to skip that source entirely.
 # ---------------------------------------------------------------------------
 
+# Notion output is also optional. Leave parent_page_id empty to skip Notion
+# and use the local web dashboard instead.
+
 discord:
   # Your Discord server's guild ID (right-click server icon -> Copy ID with
   # Developer Mode enabled).

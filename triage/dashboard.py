@@ -1,7 +1,14 @@
-"""Rich terminal dashboard — live-updating display with progress bars."""
+"""Rich terminal dashboard — live-updating display with progress bars.
+
+Launch with:
+  python dashboard.py              # Rich terminal dashboard
+  python dashboard.py --web        # Start web dashboard server
+  python web_dashboard.py          # Start web dashboard server directly
+"""
 
 import threading
 import time
+import sys
 
 from rich.console import Console
 from rich.live import Live
@@ -243,5 +250,18 @@ if __name__ == "__main__":
     import os
     os.chdir(str(__import__("pathlib").Path(__file__).parent))
 
-    from main import main as pipeline_main
-    run_dashboard(pipeline_main)
+    # Check for --web flag
+    if "--web" in sys.argv:
+        port = 8080
+        for i, arg in enumerate(sys.argv):
+            if arg == "--port" and i + 1 < len(sys.argv):
+                try:
+                    port = int(sys.argv[i + 1])
+                except ValueError:
+                    print(f"Invalid port: {sys.argv[i + 1]}")
+                    sys.exit(1)
+        from web_dashboard import run_server
+        run_server(port)
+    else:
+        from main import main as pipeline_main
+        run_dashboard(pipeline_main)

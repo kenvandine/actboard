@@ -60,7 +60,7 @@ def load_config() -> dict:
         "NOTION_API_KEY": os.getenv("NOTION_API_KEY", ""),
     }
 
-    required_keys = ["DISCORD_BOT_TOKEN", "GITHUB_TOKEN", "NOTION_API_KEY"]
+    required_keys = ["DISCORD_BOT_TOKEN", "GITHUB_TOKEN"]
     if config.get("inference", {}).get("backend", "claude") == "claude":
         required_keys.append("ANTHROPIC_API_KEY")
     missing = [k for k in required_keys if not config["env"].get(k)]
@@ -144,21 +144,28 @@ def main():
     triage_result = generate_responses(triage_result, config)
     emit("stage_complete", "responder")
 
-    # Write to Notion
-    emit("stage_start", "notion")
-    print("Writing to Notion...")
-    try:
-        page_url = write_to_notion(triage_result, config)
-        print(f"Triage board: {page_url}")
-        emit("notion_complete", "notion", page_url=page_url)
-    except Exception as e:
-        today = date.today().isoformat()
-        fallback_path = Path(__file__).parent / f"triage_output_{today}.json"
-        with open(fallback_path, "w") as f:
-            json.dump(triage_result, f, indent=2, default=str)
-        print(f"Error writing to Notion: {e}", file=sys.stderr)
-        print(f"Triage JSON saved to: {fallback_path}")
-        emit("notion_error", "notion", error=str(e))
+    # Write to Notion (optional)
+    has_notion = config.get("notion", {}).get("parent_page_id", "") and config["env"].get("NOTION_API_KEY", "")
+    if has_notion:
+        emit("stage_start", "notion")
+        print("Writing to Notion...")
+        try:
+            page_url = write_to_notion(triage_result, config)
+            print(f"Triage board: {page_url}")
+            emit("notion_complete", "notion", page_url=page_url)
+        except Exception as e:
+            print(f"Error writing to Notion: {e}", file=sys.stderr)
+            emit("notion_error", "notion", error=str(e))
+    else:
+        print("Notion not configured, skipping...")
+
+    # Always write JSON for local dashboard
+    today = date.today().isoformat()
+    output_path = Path(__file__).parent / f"triage_output_{today}.json"
+    with open(output_path, "w") as f:
+        json.dump(triage_result, f, indent=2, default=str)
+    print(f"Triage JSON saved to: {output_path}")
+    emit("json_saved", "output", path=str(output_path))
 
     duration = time.time() - start
     emit("pipeline_complete", "pipeline", duration=duration)
