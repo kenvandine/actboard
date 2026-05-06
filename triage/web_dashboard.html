@@ -43,6 +43,66 @@
             font-size: 14px;
         }
 
+        .back-link {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Index page ── */
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .history-table th {
+            color: #8b949e;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            background: #161b22;
+        }
+
+        .history-table tr:hover td {
+            background: #161b22;
+        }
+
+        .history-table td.date-cell a {
+            color: #f0f6fc;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .history-table td.date-cell a:hover {
+            color: #58a6ff;
+        }
+
+        .history-table td.date-cell .sub {
+            color: #8b949e;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* ── Stats ── */
+
         .stats {
             display: flex;
             gap: 20px;
@@ -58,17 +118,9 @@
             text-align: center;
         }
 
-        .stat-card.act {
-            border-color: #da3633;
-        }
-
-        .stat-card.monitor {
-            border-color: #d29922;
-        }
-
-        .stat-card.handled {
-            border-color: #238636;
-        }
+        .stat-card.act  { border-color: #da3633; }
+        .stat-card.monitor { border-color: #d29922; }
+        .stat-card.handled { border-color: #238636; }
 
         .stat-number {
             font-size: 32px;
@@ -76,23 +128,33 @@
             margin-bottom: 5px;
         }
 
-        .stat-card.act .stat-number {
-            color: #da3633;
-        }
-
-        .stat-card.monitor .stat-number {
-            color: #d29922;
-        }
-
-        .stat-card.handled .stat-number {
-            color: #238636;
-        }
+        .stat-card.act     .stat-number { color: #da3633; }
+        .stat-card.monitor .stat-number { color: #d29922; }
+        .stat-card.handled .stat-number { color: #238636; }
 
         .stat-label {
             color: #8b949e;
             font-size: 14px;
             text-transform: uppercase;
         }
+
+        /* inline stat badges used in the history table */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .badge.act     { background: rgba(218,54,51,.2);  color: #da3633; }
+        .badge.monitor { background: rgba(210,153,34,.2); color: #d29922; }
+        .badge.handled { background: rgba(35,134,54,.2);  color: #238636; }
+        .badge.zero    { background: #161b22; color: #484f58; }
+
+        /* ── Source sections ── */
 
         .source-section {
             background: #161b22;
@@ -110,6 +172,7 @@
             background: #1c2128;
             border-bottom: 1px solid #21262d;
             cursor: pointer;
+            user-select: none;
         }
 
         .source-header:hover {
@@ -124,13 +187,23 @@
             font-weight: 600;
         }
 
-        .source-icon {
-            font-size: 20px;
+        .source-icon { font-size: 20px; }
+
+        .chevron {
+            color: #8b949e;
+            font-size: 12px;
+            transition: transform 0.15s ease;
+            margin-left: 8px;
+        }
+
+        .source-section.expanded .chevron {
+            transform: rotate(180deg);
         }
 
         .source-counts {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            align-items: center;
             font-size: 14px;
         }
 
@@ -140,20 +213,9 @@
             font-weight: 600;
         }
 
-        .count-badge.act {
-            background: rgba(218, 54, 51, 0.2);
-            color: #da3633;
-        }
-
-        .count-badge.monitor {
-            background: rgba(210, 153, 34, 0.2);
-            color: #d29922;
-        }
-
-        .count-badge.handled {
-            background: rgba(35, 134, 54, 0.2);
-            color: #238636;
-        }
+        .count-badge.act     { background: rgba(218,54,51,.2);  color: #da3633; }
+        .count-badge.monitor { background: rgba(210,153,34,.2); color: #d29922; }
+        .count-badge.handled { background: rgba(35,134,54,.2);  color: #238636; }
 
         .source-items {
             display: none;
@@ -164,6 +226,8 @@
             display: block;
         }
 
+        /* ── Items ── */
+
         .item {
             background: #0f1117;
             border: 1px solid #21262d;
@@ -172,9 +236,7 @@
             margin-bottom: 10px;
         }
 
-        .item:last-child {
-            margin-bottom: 0;
-        }
+        .item:last-child { margin-bottom: 0; }
 
         .item-header {
             display: flex;
@@ -199,20 +261,9 @@
             white-space: nowrap;
         }
 
-        .item-category.act {
-            background: rgba(218, 54, 51, 0.2);
-            color: #da3633;
-        }
-
-        .item-category.monitor {
-            background: rgba(210, 153, 34, 0.2);
-            color: #d29922;
-        }
-
-        .item-category.handled {
-            background: rgba(35, 134, 54, 0.2);
-            color: #238636;
-        }
+        .item-category.act     { background: rgba(218,54,51,.2);  color: #da3633; }
+        .item-category.monitor { background: rgba(210,153,34,.2); color: #d29922; }
+        .item-category.handled { background: rgba(35,134,54,.2);  color: #238636; }
 
         .item-reason {
             color: #8b949e;
@@ -232,9 +283,7 @@
             text-decoration: none;
         }
 
-        .item-link:hover {
-            text-decoration: underline;
-        }
+        .item-link:hover { text-decoration: underline; }
 
         .item-label {
             background: #21262d;
@@ -242,9 +291,7 @@
             border-radius: 3px;
         }
 
-        .item-recent {
-            color: #d29922;
-        }
+        .item-recent { color: #d29922; }
 
         .suggested-response {
             margin-top: 10px;
@@ -261,6 +308,8 @@
             margin-bottom: 5px;
         }
 
+        /* ── Misc ── */
+
         .no-data {
             text-align: center;
             padding: 40px;
@@ -273,7 +322,7 @@
             margin-bottom: 20px;
         }
 
-        .filter-btn {
+        .filter-btn, .refresh-btn {
             padding: 8px 16px;
             border: 1px solid #21262d;
             background: #161b22;
@@ -283,7 +332,7 @@
             font-size: 14px;
         }
 
-        .filter-btn:hover {
+        .filter-btn:hover, .refresh-btn:hover {
             background: #1c2128;
         }
 
@@ -293,7 +342,7 @@
             color: #fff;
         }
 
-        .refresh-btn {
+        .expand-all-btn {
             padding: 8px 16px;
             border: 1px solid #21262d;
             background: #161b22;
@@ -301,71 +350,174 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            margin-left: auto;
         }
 
-        .refresh-btn:hover {
-            background: #1c2128;
-        }
+        .expand-all-btn:hover { background: #1c2128; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <div>
-                <h1>📋 Actboard Triage Dashboard</h1>
-                <div class="generated-at" id="generated-at"></div>
-            </div>
-            <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
-        </header>
-
-        <div class="stats" id="stats">
-            <div class="stat-card act">
-                <div class="stat-number" id="stat-act">0</div>
-                <div class="stat-label">ACT</div>
-            </div>
-            <div class="stat-card monitor">
-                <div class="stat-number" id="stat-monitor">0</div>
-                <div class="stat-label">MONITOR</div>
-            </div>
-            <div class="stat-card handled">
-                <div class="stat-number" id="stat-handled">0</div>
-                <div class="stat-label">HANDLED</div>
-            </div>
+        <!-- ── INDEX VIEW ── -->
+        <div id="index-view" style="display:none">
+            <header>
+                <div>
+                    <h1>📋 Actboard</h1>
+                    <div class="generated-at">Triage history</div>
+                </div>
+                <button class="refresh-btn" onclick="loadIndex()">🔄 Refresh</button>
+            </header>
+            <div id="history-content"></div>
         </div>
 
-        <div class="filter-bar">
-            <button class="filter-btn active" onclick="filterItems('all', this)">All</button>
-            <button class="filter-btn" onclick="filterItems('act', this)">ACT Only</button>
-            <button class="filter-btn" onclick="filterItems('monitor', this)">MONITOR Only</button>
-            <button class="filter-btn" onclick="filterItems('handled', this)">HANDLED Only</button>
-        </div>
+        <!-- ── DAY VIEW ── -->
+        <div id="day-view" style="display:none">
+            <header>
+                <div>
+                    <h1>📋 Actboard Triage Dashboard</h1>
+                    <div class="generated-at" id="generated-at"></div>
+                    <a class="back-link" href="/">← All runs</a>
+                </div>
+                <button class="refresh-btn" onclick="loadDay(currentDate)">🔄 Refresh</button>
+            </header>
 
-        <div id="sources"></div>
+            <div class="stats" id="stats">
+                <div class="stat-card act">
+                    <div class="stat-number" id="stat-act">0</div>
+                    <div class="stat-label">ACT</div>
+                </div>
+                <div class="stat-card monitor">
+                    <div class="stat-number" id="stat-monitor">0</div>
+                    <div class="stat-label">MONITOR</div>
+                </div>
+                <div class="stat-card handled">
+                    <div class="stat-number" id="stat-handled">0</div>
+                    <div class="stat-label">HANDLED</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterItems('all', this)">All</button>
+                <button class="filter-btn" onclick="filterItems('act', this)">ACT Only</button>
+                <button class="filter-btn" onclick="filterItems('monitor', this)">MONITOR Only</button>
+                <button class="filter-btn" onclick="filterItems('handled', this)">HANDLED Only</button>
+                <button class="expand-all-btn" id="expand-all-btn" onclick="toggleExpandAll()">Expand All</button>
+            </div>
+
+            <div id="sources"></div>
+        </div>
     </div>
 
     <script>
         let triageData = null;
         let currentFilter = 'all';
+        let currentDate = null;
+        let allExpanded = false;
 
-        async function loadData() {
+        // ── Router ──────────────────────────────────────────────────────────
+
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const date = params.get('date');
+            if (date) {
+                currentDate = date;
+                document.getElementById('day-view').style.display = 'block';
+                loadDay(date);
+            } else {
+                document.getElementById('index-view').style.display = 'block';
+                loadIndex();
+            }
+        }
+
+        // ── Index view ───────────────────────────────────────────────────────
+
+        async function loadIndex() {
+            const el = document.getElementById('history-content');
             try {
-                const response = await fetch('/api/triage');
-                triageData = await response.json();
+                const res = await fetch('/api/history');
+                const history = await res.json();
+                if (history.length === 0) {
+                    el.innerHTML = '<div class="no-data">No triage runs found. Run the triage first.</div>';
+                    return;
+                }
+                el.innerHTML = renderHistory(history);
+            } catch (e) {
+                el.innerHTML = '<div class="no-data">Error loading history.</div>';
+            }
+        }
+
+        function renderHistory(history) {
+            const rows = history.map(entry => {
+                const url = `/?date=${entry.date}`;
+                const genAt = entry.generated_at
+                    ? new Date(entry.generated_at).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+                    : '';
+                const actBadge    = badge(entry.act,     'act');
+                const monBadge    = badge(entry.monitor,  'monitor');
+                const hdlBadge    = badge(entry.handled,  'handled');
+                return `
+                    <tr>
+                        <td class="date-cell">
+                            <a href="${url}">${formatDate(entry.date)}</a>
+                            ${genAt ? `<div class="sub">Generated ${genAt}</div>` : ''}
+                        </td>
+                        <td>${actBadge}</td>
+                        <td>${monBadge}</td>
+                        <td>${hdlBadge}</td>
+                    </tr>`;
+            }).join('');
+
+            return `
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>ACT</th>
+                            <th>MONITOR</th>
+                            <th>HANDLED</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>`;
+        }
+
+        function badge(n, cls) {
+            return `<span class="badge ${n > 0 ? cls : 'zero'}">${n}</span>`;
+        }
+
+        function formatDate(iso) {
+            const [y, m, d] = iso.split('-').map(Number);
+            return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+
+        // ── Day view ─────────────────────────────────────────────────────────
+
+        async function loadDay(date) {
+            const url = date ? `/api/triage?date=${date}` : '/api/triage';
+            try {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    document.getElementById('sources').innerHTML =
+                        `<div class="no-data">No data found for this date.</div>`;
+                    return;
+                }
+                triageData = await res.json();
                 renderData();
-            } catch (error) {
-                console.error('Error loading data:', error);
-                document.getElementById('sources').innerHTML = '<div class="no-data">Error loading triage data. Make sure to run the triage first.</div>';
+            } catch (e) {
+                document.getElementById('sources').innerHTML =
+                    '<div class="no-data">Error loading triage data.</div>';
             }
         }
 
         function renderData() {
             if (!triageData) return;
 
-            // Update generated time
-            const generatedAt = triageData.generated_at || 'Unknown';
-            document.getElementById('generated-at').textContent = `Generated: ${new Date(generatedAt).toLocaleString()}`;
+            const generatedAt = triageData.generated_at || '';
+            document.getElementById('generated-at').textContent =
+                generatedAt ? `Generated: ${new Date(generatedAt).toLocaleString()}` : '';
 
-            // Calculate stats
             let totalAct = 0, totalMonitor = 0, totalHandled = 0;
             const sources = [];
 
@@ -373,39 +525,35 @@
                 if (key === 'generated_at' || key.startsWith('_')) continue;
                 if (!value || typeof value !== 'object') continue;
 
-                const actCount = value.act?.length || 0;
+                const actCount     = value.act?.length     || 0;
                 const monitorCount = value.monitor?.length || 0;
                 const handledCount = value.handled?.length || 0;
 
-                totalAct += actCount;
+                totalAct     += actCount;
                 totalMonitor += monitorCount;
                 totalHandled += handledCount;
 
                 sources.push({
                     key,
-                    name: formatSourceName(key),
-                    icon: getSourceIcon(key),
-                    act: value.act || [],
+                    name:    formatSourceName(key),
+                    icon:    getSourceIcon(key),
+                    act:     value.act     || [],
                     monitor: value.monitor || [],
-                    handled: value.handled || []
+                    handled: value.handled || [],
                 });
             }
 
-            // Update stats
-            document.getElementById('stat-act').textContent = totalAct;
+            document.getElementById('stat-act').textContent     = totalAct;
             document.getElementById('stat-monitor').textContent = totalMonitor;
             document.getElementById('stat-handled').textContent = totalHandled;
 
-            // Render sources
             const sourcesDiv = document.getElementById('sources');
             if (sources.length === 0) {
                 sourcesDiv.innerHTML = '<div class="no-data">No triage data available.</div>';
                 return;
             }
 
-            sourcesDiv.innerHTML = sources.map(source => renderSource(source)).join('');
-
-            // Apply current filter
+            sourcesDiv.innerHTML = sources.map(s => renderSource(s)).join('');
             applyFilter();
         }
 
@@ -424,20 +572,20 @@
         }
 
         function renderSource(source) {
-            const actCount = source.act.length;
+            const actCount     = source.act.length;
             const monitorCount = source.monitor.length;
             const handledCount = source.handled.length;
-            const totalCount = actCount + monitorCount + handledCount;
 
             return `
-                <div class="source-section expanded" data-source="${source.key}">
+                <div class="source-section" data-source="${source.key}">
                     <div class="source-header" onclick="toggleSource('${source.key}')">
                         <div class="source-title">
                             <span class="source-icon">${source.icon}</span>
                             <span>${source.name}</span>
+                            <span class="chevron">▼</span>
                         </div>
                         <div class="source-counts">
-                            ${actCount > 0 ? `<span class="count-badge act">ACT: ${actCount}</span>` : ''}
+                            ${actCount     > 0 ? `<span class="count-badge act">ACT: ${actCount}</span>`         : ''}
                             ${monitorCount > 0 ? `<span class="count-badge monitor">MONITOR: ${monitorCount}</span>` : ''}
                             ${handledCount > 0 ? `<span class="count-badge handled">HANDLED: ${handledCount}</span>` : ''}
                         </div>
@@ -445,59 +593,56 @@
                     <div class="source-items">
                         ${renderItems(source)}
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function renderItems(source) {
             const allItems = [];
-            const categories = ['act', 'monitor', 'handled'];
-
-            categories.forEach(cat => {
-                source[cat].forEach(item => {
-                    allItems.push({ ...item, category: cat });
-                });
+            ['act', 'monitor', 'handled'].forEach(cat => {
+                source[cat].forEach(item => allItems.push({ ...item, category: cat }));
             });
-
             if (allItems.length === 0) {
                 return '<div class="no-data">No items in this source.</div>';
             }
-
             return allItems.map(item => renderItem(item)).join('');
         }
 
         function renderItem(item) {
-            const category = item.category;
-            const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="item-link">View →</a>` : '';
-            const labelHtml = item.label ? `<span class="item-label">${item.label}</span>` : '';
-            const recentHtml = item.is_recent ? '<span class="item-recent">● Recent</span>' : '';
-            const suggestedHtml = item.suggested_response ? `
+            const cat = item.category;
+            const linkHtml = item.link
+                ? `<a href="${item.link}" target="_blank" class="item-link">View →</a>` : '';
+            const labelHtml   = item.label       ? `<span class="item-label">${item.label}</span>` : '';
+            const recentHtml  = item.is_recent   ? '<span class="item-recent">● Recent</span>'    : '';
+            const suggestHtml = item.suggested_response ? `
                 <div class="suggested-response">
                     <strong>Suggested Response:</strong>
                     ${item.suggested_response}
-                </div>
-            ` : '';
+                </div>` : '';
 
             return `
-                <div class="item" data-category="${category}">
+                <div class="item" data-category="${cat}">
                     <div class="item-header">
                         <div class="item-summary">${escapeHtml(item.summary || '')}</div>
-                        <span class="item-category ${category}">${category}</span>
+                        <span class="item-category ${cat}">${cat}</span>
                     </div>
                     <div class="item-reason">${escapeHtml(item.reason || '')}</div>
-                    <div class="item-meta">
-                        ${linkHtml}
-                        ${labelHtml}
-                        ${recentHtml}
-                    </div>
-                    ${suggestedHtml}
-                </div>
-            `;
+                    <div class="item-meta">${linkHtml}${labelHtml}${recentHtml}</div>
+                    ${suggestHtml}
+                </div>`;
         }
 
         function toggleSource(key) {
             const section = document.querySelector(`[data-source="${key}"]`);
             section.classList.toggle('expanded');
+        }
+
+        function toggleExpandAll() {
+            allExpanded = !allExpanded;
+            document.querySelectorAll('.source-section').forEach(s => {
+                s.classList.toggle('expanded', allExpanded);
+            });
+            document.getElementById('expand-all-btn').textContent =
+                allExpanded ? 'Collapse All' : 'Expand All';
         }
 
         function filterItems(filter, btn) {
@@ -508,22 +653,15 @@
         }
 
         function applyFilter() {
-            const items = document.querySelectorAll('.item');
-            items.forEach(item => {
-                if (currentFilter === 'all' || item.dataset.category === currentFilter) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
+            document.querySelectorAll('.item').forEach(item => {
+                item.style.display =
+                    (currentFilter === 'all' || item.dataset.category === currentFilter)
+                        ? 'block' : 'none';
             });
-
-            // Hide source sections with no visible items
             document.querySelectorAll('.source-section').forEach(section => {
-                const visibleItems = section.querySelectorAll('.item[style=""], .item:not([style])').length;
-                const hasVisibleItems = Array.from(section.querySelectorAll('.item')).some(
-                    item => item.style.display !== 'none'
-                );
-                section.style.display = hasVisibleItems ? 'block' : 'none';
+                const hasVisible = Array.from(section.querySelectorAll('.item'))
+                    .some(item => item.style.display !== 'none');
+                section.style.display = hasVisible ? 'block' : 'none';
             });
         }
 
@@ -533,11 +671,16 @@
             return div.innerHTML;
         }
 
-        // Load data on page load
-        loadData();
+        // ── Boot ─────────────────────────────────────────────────────────────
 
-        // Auto-refresh every 30 seconds
-        setInterval(loadData, 30000);
+        init();
+
+        // Auto-refresh every 30 s only on the day view
+        setInterval(() => {
+            if (currentDate !== null || document.getElementById('day-view').style.display !== 'none') {
+                loadDay(currentDate);
+            }
+        }, 30000);
     </script>
 </body>
 </html>

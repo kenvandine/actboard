@@ -2,7 +2,6 @@
 
 import json
 import mimetypes
-from datetime import date
 from pathlib import Path
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
@@ -18,11 +17,15 @@ class DashboardHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urllib.parse.urlparse(self.path)
         path = parsed_path.path
+        params = urllib.parse.parse_qs(parsed_path.query)
 
         if path == '/':
             self.send_file('web_dashboard.html', 'text/html')
         elif path == '/api/triage':
-            self.send_triage_json()
+            date_param = params.get('date', [None])[0]
+            self.send_triage_json(date=date_param)
+        elif path == '/api/history':
+            self.send_history_json()
         else:
             self.send_error(404, 'Not Found')
 
@@ -39,23 +42,63 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         except FileNotFoundError:
             self.send_error(404, f'File not found: {filename}')
 
-    def send_triage_json(self):
-        # Find the most recent triage_output_*.json file
-        today = date.today().isoformat()
-        json_path = Path(self.triage_dir) / f'triage_output_{today}.json'
+    def _triage_files(self):
+        return sorted(
+            Path(self.triage_dir).glob('triage_output_*.json'),
+            key=lambda p: p.name,
+            reverse=True,
+        )
 
-        # If today's file doesn't exist, try to find the most recent one
-        if not json_path.exists():
-            json_files = sorted(
-                Path(self.triage_dir).glob('triage_output_*.json'),
-                key=lambda p: p.stat().st_mtime,
-                reverse=True
-            )
-            if json_files:
-                json_path = json_files[0]
-            else:
-                self.send_error(404, 'No triage data found. Run the triage first.')
+    def send_history_json(self):
+        files = self._triage_files()
+        history = []
+        for p in files:
+            stem = p.stem  # triage_output_YYYY-MM-DD
+            date_str = stem.replace('triage_output_', '')
+            try:
+                with open(p) as f:
+                    data = json.load(f)
+                act = monitor = handled = 0
+                for key, val in data.items():
+                    if key == 'generated_at' or key.startswith('_') or not isinstance(val, dict):
+                        continue
+                    act += len(val.get('act', []))
+                    monitor += len(val.get('monitor', []))
+                    handled += len(val.get('handled', []))
+                history.append({
+                    'date': date_str,
+                    'generated_at': data.get('generated_at'),
+                    'act': act,
+                    'monitor': monitor,
+                    'handled': handled,
+                })
+            except Exception:
+                history.append({'date': date_str, 'generated_at': None, 'act': 0, 'monitor': 0, 'handled': 0})
+        content = json.dumps(history).encode('utf-8')
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', len(content))
+        self.send_header('Cache-Control', 'no-cache')
+        self.end_headers()
+        self.wfile.write(content)
+
+    def send_triage_json(self, date=None):
+        if date:
+            json_path = Path(self.triage_dir) / f'triage_output_{date}.json'
+            if not json_path.exists():
+                self.send_error(404, f'No triage data for {date}.')
                 return
+        else:
+            from datetime import date as _date
+            today = _date.today().isoformat()
+            json_path = Path(self.triage_dir) / f'triage_output_{today}.json'
+            if not json_path.exists():
+                files = self._triage_files()
+                if files:
+                    json_path = files[0]
+                else:
+                    self.send_error(404, 'No triage data found. Run the triage first.')
+                    return
 
         try:
             with open(json_path, 'r') as f:
