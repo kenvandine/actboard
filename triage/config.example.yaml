@@ -26,6 +26,12 @@ inference:
   # base_url: http://localhost:8000
   # model: your-local-model-name
 
+web:
+  # Address to bind the local web dashboard to. Defaults to localhost (loopback only).
+  # Set to 0.0.0.0 to expose on all interfaces (e.g. for LAN access).
+  host: localhost
+  port: 8080
+
 # ---------------------------------------------------------------------------
 # Each source below is OPTIONAL. Delete a section or leave its list empty
 # to skip that source entirely.

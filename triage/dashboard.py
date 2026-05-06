@@ -252,7 +252,16 @@ if __name__ == "__main__":
 
     # Check for --web flag
     if "--web" in sys.argv:
-        port = 8080
+        import yaml
+        from pathlib import Path as _Path
+        _config_path = _Path(__file__).parent / "config.yaml"
+        _config = {}
+        if _config_path.exists():
+            with open(_config_path) as _f:
+                _config = yaml.safe_load(_f) or {}
+        _web_cfg = _config.get("web", {})
+        port = _web_cfg.get("port", 8080)
+        host = _web_cfg.get("host", "localhost")
         for i, arg in enumerate(sys.argv):
             if arg == "--port" and i + 1 < len(sys.argv):
                 try:
@@ -261,7 +270,7 @@ if __name__ == "__main__":
                     print(f"Invalid port: {sys.argv[i + 1]}")
                     sys.exit(1)
         from web_dashboard import run_server
-        run_server(port)
+        run_server(port, host=host)
     else:
         from main import main as pipeline_main
         run_dashboard(pipeline_main)

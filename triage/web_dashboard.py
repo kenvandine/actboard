@@ -75,15 +75,15 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         pass
 
 
-def run_server(port=8080, triage_dir=None):
+def run_server(port=8080, host='localhost', triage_dir=None):
     """Start the local web dashboard server."""
-    parent_dir = str(Path(__file__).parent)
 
     def handler(*args, **kwargs):
         return DashboardHandler(*args, triage_dir=triage_dir, **kwargs)
 
-    server = HTTPServer(('localhost', port), handler)
-    print(f"Actboard Dashboard running at http://localhost:{port}")
+    server = HTTPServer((host, port), handler)
+    display_host = f'[{host}]' if ':' in host else host
+    print(f"Actboard Dashboard running at http://{display_host}:{port}")
     print("Press Ctrl+C to stop the server")
     try:
         server.serve_forever()
@@ -94,11 +94,22 @@ def run_server(port=8080, triage_dir=None):
 
 if __name__ == '__main__':
     import sys
-    port = 8080
-    if len(sys.argv) > 1:
-        try:
-            port = int(sys.argv[1])
-        except ValueError:
-            print(f"Invalid port: {sys.argv[1]}")
-            sys.exit(1)
-    run_server(port)
+    import yaml
+    _config_path = Path(__file__).parent / "config.yaml"
+    _config = {}
+    if _config_path.exists():
+        with open(_config_path) as _f:
+            _config = yaml.safe_load(_f) or {}
+    _web_cfg = _config.get("web", {})
+    port = _web_cfg.get("port", 8080)
+    host = _web_cfg.get("host", "localhost")
+    for i, arg in enumerate(sys.argv[1:], 1):
+        if arg == "--port" and i + 1 < len(sys.argv):
+            try:
+                port = int(sys.argv[i + 1])
+            except ValueError:
+                print(f"Invalid port: {sys.argv[i + 1]}")
+                sys.exit(1)
+        elif arg == "--host" and i + 1 < len(sys.argv):
+            host = sys.argv[i + 1]
+    run_server(port, host=host)
