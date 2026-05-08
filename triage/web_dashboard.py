@@ -60,7 +60,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     data = json.load(f)
                 act = monitor = handled = 0
                 for key, val in data.items():
-                    if key == 'generated_at' or key.startswith('_') or not isinstance(val, dict):
+                    if key == 'generated_at' or not isinstance(val, dict):
                         continue
                     act += len(val.get('act', []))
                     monitor += len(val.get('monitor', []))

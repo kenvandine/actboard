@@ -522,7 +522,7 @@
             const sources = [];
 
             for (const [key, value] of Object.entries(triageData)) {
-                if (key === 'generated_at' || key.startsWith('_')) continue;
+                if (key === 'generated_at') continue;
                 if (!value || typeof value !== 'object') continue;
 
                 const actCount     = value.act?.length     || 0;
